@@ -2,8 +2,10 @@
 
 ## Overview
 
-The `senzing/python-db2-cluster-base` docker image is a Senzing-ready, python 2.7 image with a DB2 database.
-The image can be used in a Dockerfile `FROM senzing/python-db2-cluster-base` statement to simplify
+The `senzing/python-db2-cluster-base` docker image is a Senzing-ready, python 2.7 image for use with a cluster of DB2 databases.
+For more on the DB2 database cluster techniques, visit
+"[Scaling out your database with Clustering](https://senzing.zendesk.com/hc/en-us/articles/360010599254-Scaling-out-your-database-with-Clustering)".
+This image can be used in a Dockerfile `FROM senzing/python-db2-cluster-base` statement to simplify
 building apps with Senzing.
 
 To see how to use the `senzing/python-db2-cluster-base` docker image, see
@@ -120,7 +122,7 @@ docker run hello-world
     export SENZING_DIR=/opt/senzing
     ```
 
-1. Identify the database username and password.
+1. Identify the database username and password for each database instance.
    Example:
 
     ```console
