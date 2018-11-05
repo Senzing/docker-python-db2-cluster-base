@@ -9,7 +9,7 @@ This image can be used in a Dockerfile `FROM senzing/python-db2-cluster-base` st
 building apps with Senzing.
 
 To see how to use the `senzing/python-db2-cluster-base` docker image, see
-[github.com/senzing/docker-python-db2-cluster-demo](https://github.com/senzing/docker-python-cluster-db2-demo).
+[github.com/senzing/docker-python-db2-cluster-demo](https://github.com/senzing/docker-python-db2-cluster-demo).
 To see a demonstration of senzing, python, and db2, see
 [github.com/senzing/docker-compose-db2-cluster-demo](https://github.com/senzing/docker-compose-db2-cluster-demo).
 
