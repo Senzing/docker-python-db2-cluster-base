@@ -76,9 +76,9 @@ else
   
   # Construct Senzing version of database URLs.
 
-  NEW_SENZING_CORE_DATABASE_URL="db2://${USERNAME_CORE}:${PASSWORD_CORE}@${SCHEMA_CORE}"
-  NEW_SENZING_RES_DATABASE_URL="db2://${USERNAME_RES}:${PASSWORD_RES}@${SCHEMA_RES}"
-  NEW_SENZING_LIBFE_DATABASE_URL="db2://${USERNAME_LIBFE}:${PASSWORD_LIBFE}@${SCHEMA_LIBFE}"
+  NEW_SENZING_CORE_DATABASE_ALIAS_URL="db2://${USERNAME_CORE}:${PASSWORD_CORE}@SCHEMA_CORE"
+  NEW_SENZING_RES_DATABASE_ALIAS_URL="db2://${USERNAME_RES}:${PASSWORD_RES}@SCHEMA_RES"
+  NEW_SENZING_LIBFE_DATABASE_ALIAS_URL="db2://${USERNAME_LIBFE}:${PASSWORD_LIBFE}@SCHEMA_LIBFE"
 
   # Modify files in docker's Union File System.
 
@@ -120,17 +120,17 @@ else
   if [ ! -f ${SENTINEL_FILE} ]; then
 
     sed -i.$(date +%s) \
-      -e "s|G2Connection=sqlite3://na:na@/opt/senzing/g2/sqldb/G2C.db|G2Connection=${NEW_SENZING_CORE_DATABASE_URL}|" \
+      -e "s|G2Connection=sqlite3://na:na@/opt/senzing/g2/sqldb/G2C.db|G2Connection=${NEW_SENZING_CORE_DATABASE_ALIAS_URL}|" \
       /opt/senzing/g2/python/G2Project.ini
 
     sed -i.$(date +%s) \
-      -e "s|CONNECTION=sqlite3://na:na@/opt/senzing/g2/sqldb/G2C.db|BACKEND=HYBRID\nCONNECTION=${NEW_SENZING_CORE_DATABASE_URL}|" \
+      -e "s|CONNECTION=sqlite3://na:na@/opt/senzing/g2/sqldb/G2C.db|BACKEND=HYBRID\nCONNECTION=${NEW_SENZING_CORE_DATABASE_ALIAS_URL}|" \
       -e "\$a[NODE_1]" \
       -e "\$aCLUSTER_SIZE=1" \
-      -e "\$aDB_1=${NEW_SENZING_RES_DATABASE_URL}\n" \
+      -e "\$aDB_1=${NEW_SENZING_RES_DATABASE_ALIAS_URL}\n" \
       -e "\$a[NODE_2]" \
       -e "\$aCLUSTER_SIZE=1" \
-      -e "\$aDB_1=${NEW_SENZING_LIBFE_DATABASE_URL}\n" \
+      -e "\$aDB_1=${NEW_SENZING_LIBFE_DATABASE_ALIAS_URL}\n" \
       -e "\$a[HYBRID]" \
       -e "\$aRES_FEAT=NODE_1" \
       -e "\$aRES_FEAT_EKEY=NODE_1" \
