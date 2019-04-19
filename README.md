@@ -49,8 +49,8 @@ make --version
 #### docker
 
 ```console
-docker --version
-docker run hello-world
+sudo docker --version
+sudo docker run hello-world
 ```
 
 ### Set environment variables for development
@@ -103,7 +103,7 @@ docker run hello-world
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    docker build --tag ${DOCKER_IMAGE_TAG} .
+    sudo docker build --tag ${DOCKER_IMAGE_TAG} .
     ```
 
 ## Demonstrate
@@ -148,7 +148,7 @@ docker run hello-world
    Example:
 
     ```console
-    docker ps
+    sudo docker ps
 
     # Choose value from NAMES column of docker ps
     export DB2_HOST_CORE=docker-container-name-1
@@ -167,14 +167,14 @@ docker run hello-world
 1. **Option #1** - Run the docker container without database or volumes.
 
     ```console
-    docker run -it \
+    sudo docker run -it \
       senzing/python-db2-cluster-base
     ```
 
 1. **Option #2** - Run the docker container with database and volumes.
 
     ```console
-    docker run -it  \
+    sudo docker run -it  \
       --volume ${SENZING_DIR}:/opt/senzing \
       --env SENZING_CORE_DATABASE_URL="db2://${DB2_USERNAME_CORE}:${DB2_PASSWORD_CORE}@${DB2_HOST_CORE}:${DB2_PORT_CORE}/${DB2_DATABASE_ALIAS_CORE}" \
       --env SENZING_RES_DATABASE_URL="db2://${DB2_USERNAME_RES}:${DB2_PASSWORD_RES}@${DB2_HOST_RES}:${DB2_PORT_RES}/${DB2_DATABASE_ALIAS_RES}" \
@@ -188,7 +188,7 @@ docker run hello-world
     Example:
 
     ```console
-    docker network ls
+    sudo docker network ls
 
     # Choose value from NAME column of docker network ls
     export DB2_NETWORK=nameofthe_network
@@ -197,7 +197,7 @@ docker run hello-world
     Run docker container.
 
     ```console
-    docker run -it  \
+    sudo docker run -it  \
       --volume ${SENZING_DIR}:/opt/senzing \
       --net ${DB2_NETWORK} \
       --env SENZING_CORE_DATABASE_URL="db2://${DB2_USERNAME_CORE}:${DB2_PASSWORD_CORE}@${DB2_HOST_CORE}:${DB2_PORT_CORE}/${DB2_DATABASE_ALIAS_CORE}" \
