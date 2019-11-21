@@ -1,5 +1,9 @@
 # docker-python-db2-cluster-base
 
+## :warning: Obsolete
+
+This repository has not been updated to use the RPM/DEB installation of Senzing.
+
 ## Overview
 
 The `senzing/python-db2-cluster-base` docker image is a Senzing-ready, python 2.7 image for use with a cluster of DB2 databases.
