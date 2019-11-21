@@ -15,72 +15,70 @@ To see a demonstration of senzing, python, and db2, see
 
 ### Contents
 
+1. [Expectations](#expectations)
+    1. [Space](#space)
+    1. [Time](#time)
+    1. [Background knowledge](#background-knowledge)
 1. [Build](#build)
     1. [Prerequisite software](#prerequisite-software)
-    1. [Set environment variables for development](#set-environment-variables-for-development)
     1. [Clone repository](#clone-repository)
     1. [Download ibm_data_server_driver_for_odbc_cli_linuxx64_v11.1.tar.gz](#download-ibm_data_server_driver_for_odbc_cli_linuxx64_v111targz)
-    1. [Build docker image](#build-docker-image)  
+    1. [Build docker image](#build-docker-image)
 1. [Demonstrate](#demonstrate)
     1. [Create SENZING_DIR](#create-senzing_dir)
     1. [Set environment variables for demonstration](#set-environment-variables-for-demonstration)
+    1. [Docker network](#docker-network)
     1. [Run docker container](#run-docker-container)
+
+### Legend
+
+1. :thinking: - A "thinker" icon means that a little extra thinking may be required.
+   Perhaps you'll need to make some choices.
+   Perhaps it's an optional step.
+1. :pencil2: - A "pencil" icon means that the instructions may need modification before performing.
+1. :warning: - A "warning" icon means that something tricky is happening, so pay attention.
+
+## Expectations
+
+### Space
+
+This repository and demonstration require 6 GB free disk space.
+
+### Time
+
+Budget 40 minutes to get the demonstration up-and-running, depending on CPU and network speeds.
+
+### Background knowledge
+
+This repository assumes a working knowledge of:
+
+1. [Docker](https://github.com/Senzing/knowledge-base/blob/master/WHATIS/docker.md)
 
 ## Build
 
 ### Prerequisite software
 
-The following software programs need to be installed.
+The following software programs need to be installed:
 
-#### git
+1. [git](https://github.com/Senzing/knowledge-base/blob/master/HOWTO/install-git.md)
+1. [make](https://github.com/Senzing/knowledge-base/blob/master/HOWTO/install-make.md)
+1. [docker](https://github.com/Senzing/knowledge-base/blob/master/HOWTO/install-docker.md)
 
-```console
-git --version
-```
+### Clone repository
 
-#### make
+For more information on environment variables,
+see [Environment Variables](https://github.com/Senzing/knowledge-base/blob/master/lists/environment-variables.md).
 
-Optional.
-
-```console
-make --version
-```
-
-#### docker
-
-```console
-sudo docker --version
-sudo docker run hello-world
-```
-
-### Set environment variables for development
-
-1. These variables may be modified, but do not need to be modified.
-   The variables are used throughout the installation procedure.
+1. Set these environment variable values:
 
     ```console
     export GIT_ACCOUNT=senzing
     export GIT_REPOSITORY=docker-python-db2-cluster-base
-    export DOCKER_IMAGE_TAG=senzing/python-db2-cluster-base
-    ```
-
-1. Synthesize environment variables.
-
-    ```console
     export GIT_ACCOUNT_DIR=~/${GIT_ACCOUNT}.git
     export GIT_REPOSITORY_DIR="${GIT_ACCOUNT_DIR}/${GIT_REPOSITORY}"
-    export GIT_REPOSITORY_URL="git@github.com:${GIT_ACCOUNT}/${GIT_REPOSITORY}.git"
     ```
 
-### Clone repository
-
-1. Get repository.
-
-    ```console
-    mkdir --parents ${GIT_ACCOUNT_DIR}
-    cd  ${GIT_ACCOUNT_DIR}
-    git clone ${GIT_REPOSITORY_URL}
-    ```
+1. Follow steps in [clone-repository](https://github.com/Senzing/knowledge-base/blob/master/HOWTO/clone-repository.md) to install the Git repository.
 
 ### Download ibm_data_server_driver_for_odbc_cli_linuxx64_v11.1.tar.gz
 
@@ -88,23 +86,25 @@ sudo docker run hello-world
     1. Click on "[IBM Data Server Driver for ODBC and CLI (CLI Driver)](http://www.ibm.com/services/forms/preLogin.do?source=swg-idsoc97)" link.
     1. Select :radio_button:  "IBM Data Server Driver for ODBC and CLI (Linux AMD64 and Intel EM64T)"
     1. Choose download method and click "Download now" button.
-1. Download `ibm_data_server_driver_for_odbc_cli_linuxx64_v11.1.tar.gz` to ${GIT_REPOSITORY_DIR}/[downloads](./downloads) directory.  
+1. Download `ibm_data_server_driver_for_odbc_cli_linuxx64_v11.1.tar.gz` to ${GIT_REPOSITORY_DIR}/[downloads](./downloads) directory.
 
 ### Build docker image
 
-1. Option #1 - Using make command
+1. **Option #1:** Using `docker` command and local repository.
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    make docker-build
+    sudo docker build --tag senzing/template .
     ```
 
-1. Option #2 - Using docker command
+1. **Option #2:** Using `make` command.
 
     ```console
     cd ${GIT_REPOSITORY_DIR}
-    sudo docker build --tag ${DOCKER_IMAGE_TAG} .
+    sudo make docker-build
     ```
+
+    Note: `sudo make docker-build-development-cache` can be used to create cached docker layers.
 
 ## Demonstrate
 
@@ -162,16 +162,42 @@ sudo docker run hello-world
     export DB2_PORT_LIBFE=50000
     ```
 
+### Docker network
+
+:thinking: **Optional:**  Use if docker container is part of a docker network.
+
+1. List docker networks.
+   Example:
+
+    ```console
+    sudo docker network ls
+    ```
+
+1. :pencil2: Specify docker network.
+   Choose value from NAME column of `docker network ls`.
+   Example:
+
+    ```console
+    export SENZING_NETWORK=*nameofthe_network*
+    ```
+
+1. Construct parameter for `docker run`.
+   Example:
+
+    ```console
+    export SENZING_NETWORK_PARAMETER="--net ${SENZING_NETWORK}"
+    ```
+
 ### Run docker container
 
-1. **Option #1** - Run the docker container without database or volumes.
+1. **Option #1:** Run the docker container without database or volumes.
 
     ```console
     sudo docker run -it \
       senzing/python-db2-cluster-base
     ```
 
-1. **Option #2** - Run the docker container with database and volumes.
+1. **Option #2:** Run the docker container with database and volumes.
 
     ```console
     sudo docker run -it  \
@@ -179,29 +205,6 @@ sudo docker run hello-world
       --env SENZING_CORE_DATABASE_URL="db2://${DB2_USERNAME_CORE}:${DB2_PASSWORD_CORE}@${DB2_HOST_CORE}:${DB2_PORT_CORE}/${DB2_DATABASE_ALIAS_CORE}" \
       --env SENZING_RES_DATABASE_URL="db2://${DB2_USERNAME_RES}:${DB2_PASSWORD_RES}@${DB2_HOST_RES}:${DB2_PORT_RES}/${DB2_DATABASE_ALIAS_RES}" \
       --env SENZING_LIBFE_DATABASE_URL="db2://${DB2_USERNAME_LIBFE}:${DB2_PASSWORD_LIBFE}@${DB2_HOST_LIBFE}:${DB2_PORT_LIBFE}/${DB2_DATABASE_ALIAS_LIBFE}" \
-      senzing/python-db2-cluster-base
-    ```
-
-1. **Option #3** - Run the docker container accessing a database in a docker network.
-
-    Identify the Docker network of the DB2 database.
-    Example:
-
-    ```console
-    sudo docker network ls
-
-    # Choose value from NAME column of docker network ls
-    export DB2_NETWORK=nameofthe_network
-    ```
-
-    Run docker container.
-
-    ```console
-    sudo docker run -it  \
-      --volume ${SENZING_DIR}:/opt/senzing \
-      --net ${DB2_NETWORK} \
-      --env SENZING_CORE_DATABASE_URL="db2://${DB2_USERNAME_CORE}:${DB2_PASSWORD_CORE}@${DB2_HOST_CORE}:${DB2_PORT_CORE}/${DB2_DATABASE_ALIAS_CORE}" \
-      --env SENZING_RES_DATABASE_URL="db2://${DB2_USERNAME_RES}:${DB2_PASSWORD_RES}@${DB2_HOST_RES}:${DB2_PORT_RES}/${DB2_DATABASE_ALIAS_RES}" \
-      --env SENZING_LIBFE_DATABASE_URL="db2://${DB2_USERNAME_LIBFE}:${DB2_PASSWORD_LIBFE}@${DB2_HOST_LIBFE}:${DB2_PORT_LIBFE}/${DB2_DATABASE_ALIAS_LIBFE}" \
+      ${SENZING_NETWORK_PARAMETER} \
       senzing/python-db2-cluster-base
     ```
