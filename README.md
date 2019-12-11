@@ -114,6 +114,8 @@ see [Environment Variables](https://github.com/Senzing/knowledge-base/blob/maste
 
 ### Create SENZING_DIR
 
+Note: this is an obsolete method.
+
 1. If you do not already have an `/opt/senzing` directory on your local system, visit
    [HOWTO - Create SENZING_DIR](https://github.com/Senzing/knowledge-base/blob/master/HOWTO/create-senzing-dir.md).
 
